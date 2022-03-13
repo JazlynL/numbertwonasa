@@ -21,6 +21,7 @@ public class ApodController {
     private Environment env;
 
     // Url http:localhost:3600/api/apod/image
+    // url http://localhost:3600/api/apod/image?year=2003&month=03&day=03
 
  // all route handlers created within the class will have api/apod/ added whatever to the end based on the method.
     @GetMapping("/image")
@@ -29,18 +30,20 @@ public class ApodController {
     @RequestParam("year") String year,
     @RequestParam("month") String month,
     @RequestParam("day") String day
-                            
+
 
 
     ){
+        String date = year +"-"+ month+"-"+day;
         //this is how we are able to access the values within the application properties class.
         String apodKey = env.getProperty("APOD_KEY", "cWvDm2947vDzndUC6Y0hgYVBH5zzgE6vxDnpL2Ue");
         String url = "https://api.nasa.gov/planetary/apod?api_key=" + apodKey;
+        url+="&date="+date;
 
         // this how we are going store and retrieve the data value
         Apodfields response = restTemplate.getForObject(url,Apodfields.class);
-        System.out.println("\n\n"+response.getDate());
+        System.out.println("\n\n"+response.getUrl());
 
-        return response.getDate();
+        return response.getUrl();
     }
 }
